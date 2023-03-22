@@ -542,6 +542,76 @@ If there are no more moves left, don’t ask for the next player’s move!
 code:
 import 'dart:io';
 import 'dart:math';
+
+void createBox(int row, int col) {
+  for (int i = 0; i < row; i++) {
+    for (int j = 0; j < row; j++) {
+      stdout.write(" ---");
+    }
+    stdout.write("\n");
+    for (int j = 0; j < col; j++) {
+      stdout.write("|   ");
+    }
+    stdout.write("\n");
+  }
+  for (int j = 0; j < row; j++) {
+    stdout.write(" ---");
+  }
+}
+
+int checkWinner(List<List<int>> game) {
+  int winner = 0;
+  for (int i = 0; i < 3; i++) {
+    if (game[i][0] == game[i][1] && game[i][1] == game[i][2]) {
+      winner = game[i][0];
+    } else if (game[0][i] == game[1][i] && game[1][i] == game[2][i]) {
+      winner = game[0][i];
+    } else if (game[0][0] == game[1][1] && game[1][1] == game[2][2]) {
+      winner = game[0][0];
+    } else if (game[0][2] == game[1][1] && game[1][1] == game[2][0]) {
+      winner = game[0][2];
+    }
+  }
+  return winner;
+}
+
+void setPlayerChoice(List<List<int>> board, int p) {
+  print("\n$p th" " player turn:");
+  print("from range 0 to 2 ONLY!");
+  int? x = int.parse(stdin.readLineSync()!);
+  int? y = int.parse(stdin.readLineSync()!);
+  if (board[x][y] == 0) {
+    board[x][y] = p;
+  } else {
+    print("Place taken! Choose another place: ");
+    setPlayerChoice(board, p);
+  }
+}
+
+void startGame(List<List<int>> board) {
+  bool lock = true;
+  createBox(3, 4);
+  while (lock) {
+    setPlayerChoice(board, 1);
+    setPlayerChoice(board, 2);
+    print(board);
+    int winner = checkWinner(board);
+    if (winner != 0) {
+      print("Player $winner won!");
+      lock = false;
+    }
+  }
+}
+
+void main() {
+  List<List<int>> game = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+  ];
+  startGame(game);
+}
+
 ______________________________________________________________________________________________________________
  
 Exercise 21
@@ -552,6 +622,29 @@ At the end of this exchange, your program should print out how many guesses it t
 code:
 import 'dart:io';
 import 'dart:math';
+
+void guessIt() {
+  print("Enter the number the machine will guess:");
+  int? num = int.parse(stdin.readLineSync()!);
+  bool lock = true;
+  int counter = 0;
+  while (lock) {
+    var guess = generateRandom(1, num.toDouble(), 0);
+    counter++;
+    print("Computer's guess: $guess");
+    print("write 1. if it's too low, 2. it's too high, 3. it's CORRECT!");
+    int? ans = int.parse(stdin.readLineSync()!);
+    if (ans == 3) {
+      print("Good Job bot XD");
+      print("Guesses: $counter");
+      lock = false;
+    }
+  }
+}
+
+void main() {
+  guessIt();
+}
 ______________________________________________________________________________________________________________
  
 Exercise 22
