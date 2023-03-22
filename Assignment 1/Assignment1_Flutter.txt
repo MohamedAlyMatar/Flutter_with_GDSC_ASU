@@ -352,7 +352,41 @@ Randomly generate a 4-digit number. Ask the user to guess a 4-digit number. For 
 Every time the user makes a guess, tell them how many “cows” and “bulls” they have. Once the user guesses the correct number, the game is over. Keep track of the number of guesses the user makes throughout the game and tell the user at the end.
 
 code:
+import 'dart:io';
+import 'dart:math';
 
+double generateRandom(double minValue, double maxValue, int precision) {
+  final random = new Random();
+  final doubleRandom = minValue + (maxValue - minValue) * random.nextDouble();
+  return double.parse(doubleRandom.toStringAsFixed(precision));
+}
+
+void main() {
+  var value = generateRandom(1000, 9999, 0);
+  String target = value.toString();
+  print("Let's play! now guess the four digit number: ");
+  bool lock = true;
+
+  while (lock) {
+    int? ans = int.parse(stdin.readLineSync()!);
+    String guess = ans.toString();
+    int cows = 0;
+    int bulls = 0;
+    for (int i = 0; i < 4; i++) {
+      if (guess[i] == target[i]) {
+        cows++;
+      } else if (target.contains(guess[i])) {
+        bulls++;
+      }
+    }
+    print("cows: $cows");
+    print("bulls: $bulls");
+    if (cows == 4) {
+      lock = false;
+    }
+  }
+  print("Great! The number was $value");
+}
 ______________________________________________________________________________________________________________
  
 Exercise 17
@@ -368,6 +402,32 @@ Time for some fake graphics! Let’s say we want to draw game boards that look l
 This one is 3x3 (like in tic tac toe).
  
 Ask the user what size game board they want to draw, and draw it for them to the screen using Dart’s print statement.
+
+code:
+import 'dart:io';
+import 'dart:math';
+
+void createBox(int row, int col) {
+  for (int i = 0; i < row; i++) {
+    for (int j = 0; j < row; j++) {
+      stdout.write(" ---");
+    }
+    stdout.write("\n");
+    for (int j = 0; j < col; j++) {
+      stdout.write("|   ");
+    }
+    stdout.write("\n");
+  }
+  for (int j = 0; j < row; j++) {
+    stdout.write(" ---");
+  }
+}
+
+void main() {
+  print("please enter box size:");
+  int? size = int.parse(stdin.readLineSync()!);
+  createBox(size, size + 1);
+}
 ______________________________________________________________________________________________________________
  
 Exercise 18
@@ -384,6 +444,36 @@ where a 0 means an empty square, a 1 means that player 1 put their token in that
 Your task: given a 3 by 3 list of lists that represents a Tic Tac Toe game board, tell whether anyone has won, and tell which player won, if any.
  
 A Tic Tac Toe win is 3 in a row - either in a row, a column, or a diagonal. Don’t worry about the case where TWO people have won - assume that in every board there will only be one winner.
+
+code:
+import 'dart:io';
+import 'dart:math';
+
+int checkWinner(List<List<int>> game) {
+  int winner = 0;
+  for (int i = 0; i < 3; i++) {
+    if (game[i][0] == game[i][1] && game[i][1] == game[i][2]) {
+      winner = game[i][0];
+    } else if (game[0][i] == game[1][i] && game[1][i] == game[2][i]) {
+      winner = game[0][i];
+    } else if (game[0][0] == game[1][1] && game[1][1] == game[2][2]) {
+      winner = game[0][0];
+    } else if (game[0][2] == game[1][1] && game[1][1] == game[2][0]) {
+      winner = game[0][2];
+    }
+  }
+
+  return winner;
+}
+
+void main() {
+  List<List<int>> game = [
+    [1, 2, 0],
+    [2, 1, 0],
+    [2, 1, 1]
+  ];
+  print(checkWinner(game));
+}
 ______________________________________________________________________________________________________________
  
 Exercise 19
@@ -392,6 +482,45 @@ In a previous exercise we explored the idea of using a list of lists as a “dat
 There has also been an exercise (17) about drawing the actual tic tac toe gameboard using text characters.
  
 The next logical step is to deal with handling user input. When a player (say player 1, who is X) wants to place an X on the screen, they can’t just click on a terminal. So you are going to approximate this clicking simply by asking the user for a coordinate of where they want to place their piece.
+
+code:
+import 'dart:io';
+import 'dart:math';
+
+void createBox(int row, int col) {
+  for (int i = 0; i < row; i++) {
+    for (int j = 0; j < row; j++) {
+      stdout.write(" ---");
+    }
+    stdout.write("\n");
+    for (int j = 0; j < col; j++) {
+      stdout.write("|   ");
+    }
+    stdout.write("\n");
+  }
+  for (int j = 0; j < row; j++) {
+    stdout.write(" ---");
+  }
+}
+
+void setPlayerChoice(List<List<int>> board, int x, int y, int p) {
+  board[x][y] = p;
+}
+
+void main() {
+  List<List<int>> game = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+  ];
+  createBox(3, 4);
+  print("\nplease write the coordinates of your move");
+  print("from range 0 to 2 ONLY!");
+  int? x = int.parse(stdin.readLineSync()!);
+  int? y = int.parse(stdin.readLineSync()!);
+  setPlayerChoice(game, x, y, 1);
+  print(game);
+}
 ______________________________________________________________________________________________________________
  
 Exercise 20
@@ -409,18 +538,30 @@ Here are a few things to keep in mind:
 You should keep track of who won - if there is a winner, show a congratulatory message on the screen.
 If there are no more moves left, don’t ask for the next player’s move!
 :notes: Keep in mind, the current solution is not just a copy pase of functions from the previous exercises, but rather a rework of them.
+
+code:
+import 'dart:io';
+import 'dart:math';
 ______________________________________________________________________________________________________________
  
 Exercise 21
 You, the user, will have in your head a number between 0 and 100. The program will guess a number, and you, the user, will say whether it is too high, too low, or your number.
  
 At the end of this exchange, your program should print out how many guesses it took to get your number.
+
+code:
+import 'dart:io';
+import 'dart:math';
 ______________________________________________________________________________________________________________
  
 Exercise 22
 Implement a function that takes as input three variables, and returns the largest of the three. Do this without using the Dart max() function!
  
 The goal of this exercise is to think about some internals that Dart normally takes care of for us. All you need is some variables and if statements!
+
+code:
+import 'dart:io';
+import 'dart:math';
 ______________________________________________________________________________________________________________
  
  
@@ -430,6 +571,10 @@ In this exercise, the task is to write a function that picks a random word from 
 Download this file and save it in the same directory as your Dart code. Each line in the file contains a single word.
  
 Use the Dart random library for picking a random word.
+
+code:
+import 'dart:io';
+import 'dart:math';
 ______________________________________________________________________________________________________________
  
 Exercise 24
@@ -443,6 +588,10 @@ Write the logic that asks a player to guess a letter and displays letters in the
 As a bonus, keep track of the letters the player guessed and display a different message if the player tries to guess that letter again.
  
 Remember to stop the game when all the letters have been guessed correctly! Don’t worry about choosing a word randomly or keeping track of the number of guesses the player has remaining - we will deal with those in a future exercise.
+
+code:
+import 'dart:io';
+import 'dart:math';
 ______________________________________________________________________________________________________________
  
 Exercise 25
@@ -461,5 +610,9 @@ Optional additions:
 When the player wins or loses, let them start a new game.
 Rather than telling the user “You have 4 incorrect guesses left”, display some picture art for the Hangman. This is challenging - do the other parts of the exercise first!
 Your solution will be a lot cleaner if you make use of functions to help you!
+
+code:
+import 'dart:io';
+import 'dart:math';
  
  
