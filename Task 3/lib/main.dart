@@ -86,7 +86,7 @@ void main() {
                                             borderSide: BorderSide(
                                                 color: Colors.blue, width: 2.0),
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                                BorderRadius.circular(30),
                                           ),
                                           labelText: 'User Name',
                                           hintText: 'Enter Your Name',
@@ -96,12 +96,13 @@ void main() {
                                     Padding(
                                       padding: EdgeInsets.all(15),
                                       child: TextField(
+                                        obscureText: true,
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: Colors.blue, width: 2.0),
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                                BorderRadius.circular(30),
                                           ),
                                           labelText: 'Password',
                                           hintText: 'Enter Password',
@@ -115,10 +116,13 @@ void main() {
                                         onPrimary: Colors.white,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(20),
+                                              BorderRadius.circular(30),
                                         ),
                                       ),
-                                      child: Text('Sign In'),
+                                      child: Text(
+                                        'Sign In',
+                                        style: TextStyle(fontSize: 18),
+                                      ),
                                       onPressed: () {},
                                     ),
                                     Padding(
@@ -127,10 +131,15 @@ void main() {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text("Dont have an account? "),
+                                          Text(
+                                            "Dont have an account? ",
+                                            style: TextStyle(fontSize: 16),
+                                          ),
                                           Text(
                                             "Sign Up",
-                                            style: TextStyle(color: Colors.red),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.red),
                                           )
                                         ],
                                       ),
